@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, BarChart3, Home, Users } from 'lucide-react';
+import { generateSlug } from '@/lib/utils';
 
 export default function HomePage() {
   return (
@@ -12,7 +13,7 @@ export default function HomePage() {
             FlexLiving Reviews Dashboard
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Manage and display property reviews from multiple sources including Hostaway, 
+            Manage and display property reviews from multiple sources including Hostaway,
             with powerful filtering, analytics, and approval workflows.
           </p>
         </div>
@@ -30,7 +31,7 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                Access the full admin dashboard to filter, sort, and approve reviews. 
+                Access the full admin dashboard to filter, sort, and approve reviews.
                 View detailed analytics and insights about your properties.
               </p>
               <Link href="/dashboard">
@@ -53,7 +54,7 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                See how approved reviews appear on public property pages. 
+                See how approved reviews appear on public property pages.
                 Perfect for testing the embeddable reviews section.
               </p>
               <div className="space-y-2">
@@ -62,6 +63,9 @@ export default function HomePage() {
                     View Sample Property
                   </Button>
                 </Link>
+                <div className="text-xs text-gray-500 mt-2">
+                  Available: 2B N1 A - 29 Shoreditch Heights
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -78,7 +82,7 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600 mb-4">
-                Use our RESTful API to fetch normalized reviews, 
+                Use our RESTful API to fetch normalized reviews,
                 analytics data, and public review endpoints.
               </p>
               <div className="space-y-2 text-sm">
@@ -151,7 +155,7 @@ export default function HomePage() {
                 Open Dashboard
               </Button>
             </Link>
-            <a href="https://github.com/your-repo/flexliving-reviews" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/achraf99999/Flex-Living-project" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="lg">
                 View Documentation
               </Button>

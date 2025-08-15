@@ -27,7 +27,7 @@ export function calculateAverageRating(categories?: Record<string, number>): num
   if (!categories || Object.keys(categories).length === 0) {
     return null
   }
-  
+
   const values = Object.values(categories)
   return values.reduce((sum, rating) => sum + rating, 0) / values.length
 }
@@ -38,4 +38,12 @@ export function slugify(text: string): string {
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '')
+}
+
+export function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
 }

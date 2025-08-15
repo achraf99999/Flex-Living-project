@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, MapPin, Calendar, User } from 'lucide-react';
 import { NormalizedReview } from '@/types';
-import { formatDate } from '@/lib/utils';
+import { formatDate, generateSlug } from '@/lib/utils';
 
 interface PropertyPageProps {
   params: {
@@ -18,34 +18,64 @@ export default function PropertyPage({ params }: PropertyPageProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('useEffect triggered with slug:', params.slug);
     fetchPropertyData();
+
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (loading) {
+        console.log('Loading timeout reached, setting loading to false');
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds timeout
+
+    return () => clearTimeout(timeoutId);
   }, [params.slug]);
 
   const fetchPropertyData = async () => {
+    console.log('fetchPropertyData called');
     setLoading(true);
     try {
       // First, get the listing ID from the slug
       const listingsResponse = await fetch('/api/listings');
+      console.log('Listings response status:', listingsResponse.status);
+
       if (listingsResponse.ok) {
         const listingsData = await listingsResponse.json();
-        const foundListing = listingsData.data.find((l: any) => 
-          l.name.toLowerCase().replace(/[^a-z0-9]/g, '-') === params.slug
-        );
-        
+        console.log('Listings data received:', listingsData.data.length, 'listings');
+        console.log('Looking for slug:', params.slug);
+        console.log('Available listings:', listingsData.data.map((l: any) => ({
+          name: l.name,
+          slug: generateSlug(l.name)
+        })));
+
+        const foundListing = listingsData.data.find((l: any) => {
+          const generatedSlug = generateSlug(l.name);
+          console.log('Comparing:', generatedSlug, 'with', params.slug, '=', generatedSlug === params.slug);
+          return generatedSlug === params.slug;
+        });
+
+        console.log('Found listing:', foundListing);
+
         if (foundListing) {
           setListing(foundListing);
-          
+
           // Fetch approved reviews for this listing
           const reviewsResponse = await fetch(`/api/public-reviews/${foundListing.id}`);
           if (reviewsResponse.ok) {
             const reviewsData = await reviewsResponse.json();
             setReviews(reviewsData.data.items);
           }
+        } else {
+          console.log('No listing found for slug:', params.slug);
         }
+      } else {
+        console.error('Listings API failed:', listingsResponse.status);
       }
     } catch (error) {
       console.error('Error fetching property data:', error);
     } finally {
+      console.log('Setting loading to false');
       setLoading(false);
     }
   };
@@ -58,7 +88,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
 
   const getCategoryAverages = () => {
     const categories: Record<string, { sum: number; count: number }> = {};
-    
+
     reviews.forEach(review => {
       if (review.categories) {
         Object.entries(review.categories).forEach(([category, rating]) => {
@@ -90,7 +120,20 @@ export default function PropertyPage({ params }: PropertyPageProps) {
   if (!listing) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Property not found</div>
+        <div className="text-center">
+          <div className="text-lg font-semibold mb-2">Property not found</div>
+          <div className="text-sm text-gray-600 mb-4">
+            Could not find property with slug: <code className="bg-gray-100 px-2 py-1 rounded">{params.slug}</code>
+          </div>
+          <div className="text-sm text-gray-600">
+            Available properties:
+            <ul className="mt-2 space-y-1">
+              <li>• <a href="/properties/2b-n1-a-29-shoreditch-heights" className="text-blue-600 hover:underline">2B N1 A - 29 Shoreditch Heights</a></li>
+              <li>• <a href="/properties/1b-studio-15-brick-lane" className="text-blue-600 hover:underline">1B Studio - 15 Brick Lane</a></li>
+              <li>• <a href="/properties/3b-penthouse-45-canary-wharf" className="text-blue-600 hover:underline">3B Penthouse - 45 Canary Wharf</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }
@@ -125,7 +168,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 mb-4">
-                  Experience luxury living in the heart of London. This beautifully appointed property 
+                  Experience luxury living in the heart of London. This beautifully appointed property
                   offers modern amenities, stunning views, and exceptional service for your stay.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
@@ -217,7 +260,7 @@ export default function PropertyPage({ params }: PropertyPageProps) {
                         <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                       </div>
                     </div>
-                    
+
                     {review.text && (
                       <p className="text-gray-700 mb-3">{review.text}</p>
                     )}
