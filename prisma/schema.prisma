@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Listing {
+  id            String   @id @default(cuid())
+  externalId    String?  @unique     // Hostaway listing id if available
+  name          String
+  slug          String   @unique
+  channel       String?              // e.g., "hostaway", "google"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  reviews       Review[]
+}
+
+model Review {
+  id            String   @id @default(cuid())
+  source        String                // "hostaway" | "google"
+  externalId    String?               // from source
+  listingId     String
+  listing       Listing  @relation(fields: [listingId], references: [id])
+  type          String                // "guest-to-host" | "host-to-guest" etc.
+  status        String                // "published" | "draft" | ...
+  ratingOverall Float?                // overall/average if available
+  categories    Json?                 // {cleanliness:10, communication:10, ...}
+  text          String?
+  authorName    String?
+  submittedAt   DateTime
+  approved      Boolean  @default(false)
+  channel       String?               // e.g., "airbnb", "booking", "google"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  selectionLogs ReviewSelectionLog[]
+
+  @@unique([externalId, source])
+}
+
+model ReviewSelectionLog {
+  id         String   @id @default(cuid())
+  reviewId   String
+  review     Review   @relation(fields: [reviewId], references: [id])
+  action     String   // "approved" | "unapproved"
+  actor      String?  // admin email/id
+  createdAt  DateTime @default(now())
+}

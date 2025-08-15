@@ -1,0 +1,9 @@
+{
+  "/page": "app/page.js",
+  "/(dashboard)/dashboard/page": "app/(dashboard)/dashboard/page.js",
+  "/api/reviews/hostaway/route": "app/api/reviews/hostaway/route.js",
+  "/api/listings/route": "app/api/listings/route.js",
+  "/api/reviews/analytics/route": "app/api/reviews/analytics/route.js",
+  "/(public)/properties/[slug]/page": "app/(public)/properties/[slug]/page.js",
+  "/api/reviews/approve/route": "app/api/reviews/approve/route.js"
+}
