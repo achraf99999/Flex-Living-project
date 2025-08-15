@@ -167,7 +167,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## 📞 Support
 
 - Open GitHub issues for bugs or feature requests
-- For questions, consult the code and this README
+- For questions, you can reach me on mail .
 
 ---
 
