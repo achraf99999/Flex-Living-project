@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Star, Filter, Search, TrendingUp, MessageSquare, CheckCircle, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, Filter, Search, TrendingUp, MessageSquare, CheckCircle, AlertCircle, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { NormalizedReview, AnalyticsData, ListingWithStats } from '@/types';
 import { formatDate, formatDateTime } from '@/lib/utils';
 import { ReviewCard } from '@/components/ReviewCard';
@@ -168,6 +168,54 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center max-w-md mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                <AlertCircle className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-red-900">Connection Error</h3>
+                <p className="text-sm text-red-700">Failed to connect to the database</p>
+              </div>
+            </div>
+
+            <div className="text-left text-sm text-red-700 space-y-2">
+              <p><strong>Common causes:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>Database not configured in Vercel</li>
+                <li>Environment variables missing</li>
+                <li>Database connection string invalid</li>
+                <li>Database not accessible from Vercel</li>
+              </ul>
+            </div>
+
+            <div className="mt-4 p-3 bg-red-100 rounded text-xs text-red-800">
+              <strong>Error details:</strong> {error}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Button onClick={fetchData} className="w-full">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Retry Connection
+            </Button>
+
+            <div className="text-xs text-gray-500">
+              <p>If the problem persists, check your Vercel environment variables:</p>
+              <p>• DATABASE_URL</p>
+              <p>• HOSTAWAY_API_KEY</p>
+              <p>• NEXTAUTH_SECRET</p>
+            </div>
+          </div>
         </div>
       </div>
     );

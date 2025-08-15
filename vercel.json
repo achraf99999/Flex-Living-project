@@ -9,5 +9,15 @@
   },
   "env": {
     "PRISMA_GENERATE_DATAPROXY": "true"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "@database_url",
+      "HOSTAWAY_ACCOUNT_ID": "@hostaway_account_id",
+      "HOSTAWAY_API_KEY": "@hostaway_api_key",
+      "HOSTAWAY_BASE_URL": "@hostaway_base_url",
+      "NEXTAUTH_SECRET": "@nextauth_secret",
+      "NEXTAUTH_URL": "@nextauth_url"
+    }
   }
 }
